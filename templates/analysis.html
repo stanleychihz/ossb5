@@ -1,0 +1,69 @@
+{% extends 'xbase.html' %}
+
+{% block content%}
+
+{% if user.is_authenticated %}
+
+{% if user.username == 'ADMIN' %}
+
+  <div class="data-charts">
+
+    <div>
+        <canvas id="myChart"></canvas>
+    </div>
+      
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+      
+      <script>
+        const ctx = document.getElementById('myChart');
+      
+        new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: [{% for y in uni_list %} '{{ y }}', {% endfor %}],
+            datasets: [{
+              label: 'Suggestion Frequency',
+              data: [{% for y in rate %} {{ y }}, {% endfor %}],
+              borderWidth: 1,
+              borderColor: 'orange',
+              backgroundColor: 'grey'
+            }]
+          },
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true
+              }
+            }
+          }
+        });
+      </script>
+  </div>
+
+
+{% endif %}
+
+
+{% endif %}
+
+
+<style>
+
+
+    @media (min-width: 1300px) and (max-width: 3000px)  {
+     
+      .data-charts {
+        margin-top: 100px;
+        margin-left: 180px;
+        width: 1000px;
+        height: 520px;
+        padding: 5px;
+        background-color: white;
+        border-radius: 12px;
+      }
+
+    }
+  
+</style>
+
+{% endblock %}

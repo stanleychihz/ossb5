@@ -1,0 +1,260 @@
+{% extends "xbase.html" %}
+
+{% block content %}
+
+
+
+            <!--center> <div class='msg'>{{ empty }} ! </div> </center>
+<script>
+    setTimeout(function() {
+        $ ('.msg').empty();
+    }, 2000);
+</script-->
+
+<fieldset class='home-set'> 
+
+    <form method='post' enctype="multipart/form-data">
+        {% csrf_token %}
+
+    <div class='title-panel'>
+        <div class='title0'> Write a suggestion concerning on </div>
+            <select type="text" name="cat" class="select-cat">
+                <option value="" hidden>select</option>
+                    {% for cat in cats %}
+                        <option style='color: black;'> {{ cat.title }} </option>
+                    {% endfor %}
+            </select>
+            <div class='title'> - Note that your Registration Number '{{user.username}}' will be public to all users ! </div>
+        <div class='title2'> - Note that your identity will be anonymous to all users ! </div>
+        <div class='identity-btn'> <div class='hi'> Hide Identity </div> <div class='si'> Show Identity </div> </div>
+    </div>
+    
+    
+
+    <div> 
+        <textarea type='text' class='msg-panel' name='msg'></textarea> 
+        <div class='proofs'>
+            Media
+            <div class='proofs2'>
+            <div class='image'>
+            <input class="proof-image" type="file" name="image"  accept='image/*'>
+            Upload Image
+            </div>
+            <div class='video'>
+            <input class="proof-image" type="file" name="video" accept='video/*'>
+            Upload Video
+            </div>
+            <div class='audio'>
+            <input class="proof-image" type="file" name="audio" accept='audio/*'>
+            Upload Audio
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <div class='msg-btn'>
+        <button type='submit'> Send </button>
+        <input type='text' value = {{ user.username }} name='reg' style='color:black; display: none'>
+        <input type='text' value = 'public' name='ide' style='color:black; display: none' id='myinput'>
+        <input type='text' value = {{ user.first_name }} name='nickname' style='color:black; display: none'>
+    </div>
+
+
+</form>
+</fieldset>
+
+<script>
+
+    const identity_btn = document.querySelector('.identity-btn');
+    const identity_on = document.querySelector('.title');
+    const identity_off = document.querySelector('.title2');
+    const hide_identity = document.querySelector('.hi');
+    const show_identity = document.querySelector('.si');
+    const audio = document.querySelector('.audio');
+    const video = document.querySelector('.video');
+
+    identity_btn.addEventListener('click', () => {
+        identity_on.classList.toggle('active');
+        identity_off.classList.toggle('active');
+        hide_identity.classList.toggle('active');
+        show_identity.classList.toggle('active');
+        audio.classList.toggle('active');
+        video.classList.toggle('active');
+        const input  = document.getElementById('myinput');
+        const current_value = input.value;
+        const new_value = current_value === 'public' ? 'private' : 'public';
+        input.value = new_value;
+    })
+</script>
+
+
+
+<style>
+
+    @media (min-width: 1300px) and (max-width: 3000px) {
+
+        .select-cat {
+            color: black;
+            width: 80px;
+
+        }
+        .home-set {
+            position: relative;
+            left: 0%;
+            margin: auto;
+            width: 78%;
+            height: auto;
+            padding: 10px;
+            border-radius: 12px;
+            border: none;
+        }
+
+        .title-panel {
+            padding: 10px;
+            margin-bottom: 30px;
+            width: 97.3%;
+            justify-content: space-between;
+            background-color: grey;
+            border-radius: 12px;
+            font-size: 15px;
+            display: flex;
+        }
+
+        .title, .title0 {
+            margin:auto 1px;
+        }
+
+        .title.active {
+            display: none;
+        }
+
+        .title2 {
+            display: none;
+        }
+
+        .title2.active {
+            display: block;
+            margin:auto 1px;
+        }
+
+        .identity-btn {
+            background-color: #36454f;
+            padding: 5px 30px;
+            cursor: pointer;
+            scale: 1;
+            transition: 1.5s;
+            &:hover {
+                scale: 1.05;
+            }
+            &:active{
+                scale: 1;
+            }
+        }
+
+        .si, .hi.active {
+            display: none;
+        }
+
+        .si.active, .hi {
+            display: block;
+        }
+
+        .msg-panel {
+            color: black;
+            width: 98%;
+            margin: auto;
+            padding-left: 10px;
+            height: 130px;
+            border-radius: 12px;
+            font-size: 17px;
+            margin-bottom: 10px;
+            border: none;
+            resize: none;
+
+        }
+
+        .msg-btn {
+            margin: auto 8px;
+            
+        }
+
+        .msg-btn button {
+            color: black;
+            border-radius: 3rem;
+            font-size: 20px;
+            padding: 10px 30px;
+            background-color: blue;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .proofs {
+            display: grid
+            background-color: grey;
+            padding: 10px;
+            font-size: 15px;
+        }
+        .proofs2 {
+            display: flex;
+            justify-content: space-between;
+            background-color: grey;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 30px;
+            border-radius: 12px;
+        }
+
+        .image, .video, .audio {
+            font-size: 15px;
+            display: grid;
+            gap: 8px;
+        }
+
+        .video.active, .audio.active {
+            display: none;
+        }
+    }
+
+    @media (max-width: 992px) {
+        .home-set {
+            position: relative;
+            left: 13%;
+            margin: 100px 0;
+            width: 100%;
+            height: 1400px;
+            border-radius: 12px; 
+            border: transparent;
+        }
+
+        .title-panel {
+            margin: 10px 10px; 
+            font-size: 55px;
+        }
+
+        .msg-panel {
+            color: black;
+            width: 98%;
+            margin: 50px 10px;
+            height: 780px;
+            border-radius: 12px;
+            font-size: 35px;
+        }
+
+        .msg-btn {
+            margin: auto 10px;
+        }
+
+        .msg-btn button {
+            color: black;
+            font-size: 70px;
+            border-radius: 12px;
+        }
+
+    }
+</style>
+
+
+
+{% endblock %}
+

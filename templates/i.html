@@ -1,0 +1,43 @@
+{% extends "xbase.html" %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+ 
+<div class='info'>
+   <p> Vision: To create a digital platform where students feel empowered to share their thoughts, ideas, and concerns, fostering a culture of openness, transparency, and collaboration in educational institutions.</p>
+
+   <p>Mission: Our mission is to provide a secure, anonymous, and user-friendly online suggestion box that encourages students to share their feedback, suggestions, and opinions, enabling educators and administrators to respond promptly and effectively, ultimately enhancing the overall student experience and improving academic outcomes.</p>
+
+
+</div>
+
+{% endif %}
+
+<style>
+
+    @media (min-width: 1300px) and (max-width: 3000px) {
+        .info {
+            border: solid thin white;
+            margin: 150px 100px;
+            font-size: 30px;
+            padding: 50px;
+            border-radius: 12px;
+            height: auto;
+            box-shadow: 5px 5px 5px grey;
+        }
+
+        .btn {
+            background-color: orange;
+            padding: 15px 10px;
+            width: 150px;
+            float: left;
+            margin: 15px 40px;
+            text-align: center;
+            border-radius: 12px;
+        }
+    }
+
+</style>
+
+{% endblock %}

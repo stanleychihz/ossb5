@@ -1,0 +1,44 @@
+{% extends "xbase.html" %}
+
+{% block content %}
+
+{% for message in messages %}
+   <div class="msg">
+    <h1>{{ message }}</h1>
+      <a href="{% url 'suggestion' %}"> <div class='btn1'>  Back  </div> </a>
+  </div>
+ {% endfor %}
+
+ <style>
+
+  @media (min-width: 1300px) and (max-width: 3000px) {
+      .msg {
+          border: solid thin white;
+          margin: 220px auto;
+          font-size: 15px;
+          width: 650px;
+          padding: 20px 40px;
+          height: auto;
+          border-radius: 12px;
+          box-shadow: 5px 5px 5px grey;
+          &:hover{
+            box-shadow: 5px 5px orange;
+          }
+      }
+
+      
+
+      .btn1 {
+        background-color: orange;
+        padding: 15px 10px;
+        width: 60px;
+        margin: 15px 1px;
+        text-align: center;
+        border-radius: 12px;
+    }
+
+  }
+
+</style>
+
+ {% endblock %}

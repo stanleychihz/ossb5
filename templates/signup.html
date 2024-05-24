@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+
+<head>
+</head>
+
+<body class='page'>
+
+    <div class='name'> ONLINE STUDENT SAFEGUARDING BOX </div>
+
+    {% for y in x %}
+    <img src='{{ y.img.url }}'>
+    {% endfor %}
+
+    <fieldset class='signup-box'>
+        <center> <div class='title'> SIGNUP </div> </center>
+        {% for message in messages %}
+        {% if message %}
+            <center> <div class='msg'>{{ message }} ! </div> </center>
+        {% else %}
+            <center> <div class='title'> SIGNUP </div> </center>
+        {% endif %}
+        {% endfor %}
+        
+        
+        <form method='post' action='#'>
+            {% csrf_token %}
+
+        <div class='outer-div'> Reg Number : <div class='input-div'> <input type='text' name='reg' class='inputs'> </div> </div>
+
+        <div class='outer-div'> Username : <div class='input-div'> <input type='text' name='nickname' class='inputs' placeholder='enter username'> </div> </div>
+
+        <div class='outer-div'> Password : <div class='input-div'> <input type='password' name='password1' class='inputs' placeholder='Password should be at least 8 characters'> </div> </div>
+
+        <div class='outer-div'> Confirm Password : <div class='input-div'> <input type='password' name='password2' class='inputs' placeholder='Passwords should match'> </div> </div>
+
+        <div class='outer-div-bottom'> <button type='submit' class='signup-btn'> SignUp </button> 
+            <a href={% url 'lgn' %}>  {% if msg %} {{ msg }} {% else %} Already have an account {% endif %} </a> 
+        </div>
+
+        </form>
+
+    </fieldset>
+
+
+</body>
+
+</html>
+
+<style>
+
+@media  (min-width: 1300px) and (max-width: 3000px) {
+
+    * {
+        color : white;
+    }
+    
+    .page {
+        background-color: #36454f;
+    }  
+    
+    .name {
+        font-size: 45px;
+        margin: 10px 15%;
+    }
+
+    img {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        margin: 30px 45%;
+        position: relative;
+    }
+
+    .msg {
+        background-color: #FF000070;
+        padding: 10px 30px;
+        width: 300px;
+        border-radius: 12px;
+    }
+
+    .title {
+        font-size: 15px;
+        margin: 20px auto;
+    }
+    
+    .signup-box {
+        position: relative;
+        margin: 30px auto;
+        width: 400px;
+        height: auto;
+        padding-bottom: 30px;
+        border-radius: 12px;
+        font-family: Arial, sans-serif;
+        box-shadow: 1px 1px 10px 10px grey;
+    }
+
+    .outer-div {
+        width: 90%;
+        margin: 20px auto;
+    }
+    
+    .outer-div-bottom {
+        justify-content: center;
+        display: flex
+        gap: 50px
+    }
+
+    .outer-div-bottom a {
+        background-color: white;
+        padding: 10px;
+        color: black;
+        border-radius: 3rem;
+        text-decoration: none;
+        margin-left: 30px;
+    }
+    
+    .inputs {
+        color: black;
+        width: 100%;
+        height: 30px;
+        border-radius: 12px;
+        font-size: 15px;
+        font-family: Arial, sans-serif;
+        text-align: center;
+        border: none;
+    }
+    
+    .signup-btn {
+        background-color: white;
+        color: black;
+        margin-left: 30px;
+        padding: 10px 30px;
+        border-radius: 3rem;
+        border: none;
+        height: 40px;
+        font-size: 16px;
+        font-family: 'Arial', 'sans-serif';
+        margin-top: .9rem;
+    }
+    
+    .signup-btn:hover {
+        background-color: orange;
+    }
+    
+    #link {
+
+        margin: 12px 70px;
+        background-color: white;
+        color: black;
+        padding: 3px;
+        border-radius: 3rem;
+    }
+}
+
+@media (max-width: 992px) {
+
+    * {
+        color : white;
+    }
+    
+    .page {
+        background-color: #36454f;
+    } 
+
+    .name {
+        font-size: 60px;
+        margin: 150px 10%;
+    }
+
+    img {
+        width: 300px;
+        height: 300px;
+        border-radius: 50%;
+        margin: 10px 50%;
+    }
+
+    .title {
+        font-size: 45px;
+        margin: 50px auto;
+    }
+
+    .signup-box {
+        width: 100%;
+        height: 1200px;
+        margin: 20% 10%;
+        border-radius: 45px;
+    }
+    
+    .outer-div {
+        width: 95%;
+        margin: 120px auto;
+        font-size: 40px;
+    }
+    
+    .inputs {
+        color: black;
+        width: 100%;
+        height: 70px;
+        font-size: 40px;
+        border-radius: 12px;
+    }
+    
+    .signup-btn {
+        color: black;
+        padding: 30px 70px;
+        transtion: 1s;
+        font-size: 30px;
+        border-radius: 45px;
+    }
+
+    .signup-btn:hover {
+        background-color: orange;
+    }
+    
+    #link {
+        margin: -70px 350px;
+        width: 80%;
+        font-size: 30px;
+    }
+
+    .msg {
+        font-size: 30px;
+        margin: 100px auto;
+    }
+}
+
+</style>

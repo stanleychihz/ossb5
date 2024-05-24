@@ -1,0 +1,229 @@
+{% extends "xbase.html" %}
+
+{% block content %}
+
+
+{% for msg in msgs %}
+
+<a href="{% url 'view_message' msg.pk %}"> 
+
+    <div class='title-panel'>
+                            <div>
+                            A suggestion from
+                             {% if msg.identity == 'private' %} 
+                            {{'anonymous'}} concerning on {{ msg.cat }} issues, {{msg.timestamp}}
+                            <div class='icons-only'>
+                                <div class='no-comment-like'>
+                                    <div class='inner-no-comment-like'>
+                                        {% for icon in icons %} <img src={{ icon.comment.url }} class='icons'> {% endfor %} 
+                                    <div> {{ msg.no_comments }} </div>
+                                    
+                                    </div>
+                                    <div class='inner-no-comment-like'>
+                                        {% for icon in icons %} <img src={{ icon.like.url }} class='icons'> {% endfor %} 
+                                    <div> {{ msg.no_likes }} </div>
+                                    </div>
+                                </div>
+
+                            <div class='type-of-message'>
+                                {% if msg.msg %} {% for icon in icons %} <img src={{ icon.edit.url }} class='icons'> {% endfor %} {% endif %}
+                                {% if msg.audio %} {% for icon in icons %} <img src={{ icon.audio.url }} class='icons'> {% endfor %} {% endif %}
+                                {% if msg.image %} {% for icon in icons %} <img src={{ icon.image.url }} class='icons'> {% endfor %} {% endif %}
+                                {% if msg.video %} {% for icon in icons %} <img src={{ icon.video.url }} class='icons'> {% endfor %} {% endif %}
+                            </div>
+                                
+                            {% else %}
+                            {{ msg.reg }} concerning on {{ msg.cat }} issues, {{msg.timestamp}}
+                            </div>
+                            <div class='icons-only'>
+                                <div class='no-comment-like'>
+                                    <div class='inner-no-comment-like'>
+                                        {% for icon in icons %} <img src={{ icon.comment.url }} class='icons'> {% endfor %} 
+                                    <div> {{ msg.no_comments }} </div>
+                                    
+                                    </div>
+                                    <div class='inner-no-comment-like'>
+                                        {% for icon in icons %} <img src={{ icon.like.url }} class='icons'> {% endfor %} 
+                                    <div> {{ msg.no_likes }} </div>
+                                    </div>
+                                </div>
+                                
+                            <div class='type-of-message'>
+                                {% if msg.msg %} {% for icon in icons %} <img src={{ icon.edit.url }} class='icons'> {% endfor %} {% endif %}
+                                {% if msg.audio %} {% for icon in icons %} <img src={{ icon.audio.url }} class='icons'> {% endfor %} {% endif %}
+                                {% if msg.image %} {% for icon in icons %} <img src={{ icon.image.url }} class='icons'> {% endfor %} {% endif %}
+                                {% if msg.video %} {% for icon in icons %} <img src={{ icon.video.url }} class='icons'> {% endfor %} {% endif %}
+                            {% endif %}
+                            </div>
+
+                            
+                        </div>
+                            
+                             {% for reply in replys %} {% if msg.pkv == reply.pkv %}
+                             {% if reply.reply %}
+                            <div class='replied'>
+                                <i> Replied </i>
+                            </div>
+                            
+                            {% else %}
+                            <div class='not-replied'>
+                                <i>Not Replied </i>
+                            </div>
+                            {% endif %}
+                            {% endif %}
+                            {% endfor %}
+                            
+    </div>
+
+    
+
+</a>
+
+{% endfor %}
+
+
+
+<style>
+
+    @media (min-width: 1300px) and (max-width: 3000px) { 
+
+        .icons-only {
+            display: flex;
+            gap: 10px;
+        }
+
+        .type-of-message {
+            margin: auto 150px;
+        }
+
+        .no-comment-like {
+            margin: auto 1px;
+            display: flex;
+            width: 149px;
+            gap: 10px;
+        }
+
+
+
+        .inner-no-comment-like {
+            display: flex;
+            margin-right: 10px;
+            
+        }
+
+        .inner-no-comment-like div {
+            font-size: 15px;
+            margin: auto;
+            margin-right: 10px;
+        }
+
+
+        .icons {
+           border-radius: 0;
+           width: 20px; height: 20px;
+           margin: 10px auto; 
+           margin-right: 10px;
+        }
+        .home-set {
+            position: relative;
+            left: 0%;
+            margin: 5px 0;
+            width: 98%;
+            height: 400px;
+            border-radius: 12px;
+            border: transparent;
+        }
+
+        .title-panel {
+            margin: 30px 200px; 
+            padding: 10px;
+            padding-bottom: 10px;
+            background-color: grey;
+            font-size: 20px;
+            height: auto;
+            border-radius: 12px;
+            text-align: left;
+        }
+
+        .title-panel:hover {
+            box-shadow: 5px 5px orange;
+        }
+
+        .replied {
+            margin: 0 845px;
+            background-color: green;
+            padding: 3px;
+            padding-bottom: 10px;
+            width: 55px;
+            height: 10px;
+            text-align: center;
+            font-size: 15px;
+            border-radius: 12px;
+            border: solid orange thin;
+        }
+
+        .not-replied {
+            margin: 0 750px;
+            background-color: orange;
+            padding: 10px;
+            width: 100px;
+            height: 15px;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 18px;
+        }
+
+    }
+
+    @media (max-width: 992px) {
+        
+
+        .title-panel {
+            margin: 100px 10px; 
+            background-color: grey;
+            font-size: 50px;
+            width: 123%;
+            height: 200px;
+            padding-left: 50px;
+            padding-top: 50px;
+            border-radius: 12px;
+            scale: 1;
+            transition: 1s;
+            text-align: left;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .title-panel:hover {
+            scale: 1.02;
+            background-color: black;
+        }
+
+        .msg-panel {
+            color: black;
+            width: 98%;
+            margin: 50px 10px;
+            height: 780px;
+            border-radius: 12px;
+            font-size: 35px;
+        }
+
+        .msg-btn {
+            margin: auto 10px;
+        }
+
+        .msg-btn button {
+            color: black;
+            font-size: 70px;
+            border-radius: 12px;
+        }
+
+    }
+</style>
+
+
+
+{% endblock %}
+

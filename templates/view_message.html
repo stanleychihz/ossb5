@@ -1,0 +1,825 @@
+{% extends "xbase.html" %}
+
+{% block content %}
+
+<!--this is the admin view-->
+
+{% if user.is_authenticated %}
+
+
+
+{% if msgs %}
+
+<div class='title-panel'>
+    From {% if msgs.identity == 'private' %}
+        {{'anonymous'}} 
+        {% else %} 
+        {{ msgs.reg }}  about {{ msgs.cat }} issues.
+        {% endif %}
+
+         {% if msgs.msg %} <div class='title-panel2'> {{ msgs.msg }} </div> {% endif %}
+
+        {% if msgs.audio %}
+        <div class='title-panel5'>
+            <audio controls class="sent-audio" onload="Javascript:AutoRefresh(1000);">
+                <source src= {{ msgs.audio.url }} type="audio/mp3" />
+            </audio>
+            <div class='icon-time'>
+            {% for icon in icons %} <img src={{ icon.audio.url }} class='audio-icon'> {% endfor %}
+            audio
+            <i> {{ msgs.time }} </i>
+            </div>
+        </div>
+       {% endif %}
+
+       {% if msgs.image %} 
+        <div class='title-panel4'> <img src={{msgs.image.url}} class='sent-image'> 
+            <div class='icon-time'>
+            {% for icon in icons %} <img src={{ icon.image.url }} class='image-icon'> {% endfor %}
+            photo
+             <i> {{ msgs.time }} </i> 
+            </div>
+        </div>{% endif %}
+
+        {% if msgs.video %}
+        <div class='title-panel6'>
+            <video class="sent-video" controls="controls" onload="Javascript:AutoRefresh(1000);">
+                <source src= {{ msgs.video.url }} type="video/mp4" />
+            </video>
+            <div class='icon-time'>
+                {% for icon in icons %} <img src={{ icon.video.url }} class='video-icon'> {% endfor %}
+                video 
+            <i> {{ msgs.time }} </i>
+            </div>
+        </div>
+       {% endif %}
+        <!--p class='title-panel3'> Sent on : {{msgs.timestamp}}  </p>
+        <p class='title-panel3'> With : {{ likes }} <i> like(s) </i>  </p-->
+
+        <div class='comment-like-back-div'>
+            <div class='comment-btn-number'>
+                {% for icon in icons %} <img src={{ icon.comment.url }} class='comment-btn'> {% endfor %}
+                <div style='color: black; margin-left: 20px;'> {{ number }} <i> comment(s) </i> </div>
+            </div>
+            <form method='post' action="{% url 'like' %}">
+                {% csrf_token %}
+                <input type='text' name='pkv2' value={{ msgs.pkv }} hidden>
+                <input type='text' name='replied2' value={{ msgs.reg }} hidden>
+                <textarea type='text' name='msg_replied2' hidden> {{ msgs.msg }} </textarea>
+                <input type='text' name='reg2' value={{ user.username }} hidden>
+                <input type='text' name='nickname12' value={{ user.first_name }} hidden>
+                <input type='text' name='like' hidden value='1'>
+                <input type='text' name='no_like' value={{likes}} hidden>
+                <div class='like-btn-number'>
+                {% for icon in icons %}  <button type='submit' style='background-color: transparent; border: none; width: 40px; height: 40px; margin-bottom: 40px;'> <img src={{ icon.like.url }} class='like-btn'> </button> {% endfor %}
+                {{ likes }} <i> like(s) </i>
+                </div>
+            </form>
+            
+            <div class='back-btn-number'>
+            <a href="{% url 'inbox' %}"> {% for icon in icons %} <img src={{ icon.back.url }} class='back-to-inbox-btn'> {% endfor %} </a>
+            {{ msgs.timestamp }}
+            </div>
+        </div>
+
+        <div class='comments'> 
+                <h5> {{ number }} comment(s) </h5>
+            {% for comment in comments %}
+
+            <div class='ui-comment'>
+                {% for ui in usericon %} <img src={{ui.img.url}} class='ui'> {% endfor %}
+                <div class='comment-div'> 
+                    {% if msgs.reg == comment.reg %}
+                    from @ <i> You </i>
+                    {% else %}
+                            <div class='comment-name'> from @ {{ comment.username }} </div>
+                    {% endif %}
+                    <div class='comment-reply'> {{ comment.msg }} </div>
+                    <div class='comment-time-delete-div'>
+                        <div style='color: black; margin: auto 10px; font-size: 15px;'> . </div>
+                        <div class='comment-time'> {{ comment.timestamp }} </div>
+                    </div>
+                </div>
+            </div>
+            
+            {% endfor %}
+
+        <div class='hide-comment-div'> <h5 class='open2'> Comment </h5> <h5 class='close2'> Close </h5> </div>
+
+        <form method='post' action="{% url 'view_message' msgs.pk %}">
+            {% csrf_token %}
+            <div class='own-comment-div'>
+            <h6> Add Comment </h6>
+            <input type='text' name='no_comment' value={{ number }} hidden>
+            <input type='text' name='pkv' value={{ msgs.pkv }} hidden>
+            <input type='text' name='replied' value={{ msgs.reg }} hidden>
+            <textarea type='text' name='msg_replied' hidden> {{ msgs.msg }} </textarea>
+            <input type='text' name='reg' value={{ user.username }} hidden>
+            <input type='text' name='nickname1' value={{ user.first_name }} hidden>
+            <input type='text' name='nickname2' hidden value={{ msgs.nickname }}>
+            <textarea class='own-comment-msg' type='text' name='comment'> </textarea>
+            <button class='own-comment-btn' type='submit'> Send </button>
+            </div>
+        </form>
+
+        </div> 
+</div>
+
+    {% for reply in replys %}
+
+    {% if msgs.pkv == reply.pkv %}
+
+    <div class='space'>
+        <h3>Reply From Adminstration</h3>
+        
+
+        {% if reply.reply %} <div class='title-panel2'> {{ reply.reply }} </div> {% endif %}
+
+        {% if reply.audio %}
+        <div class='title-panel5'>
+            <audio controls class="sent-audio" onload="Javascript:AutoRefresh(1000);">
+                <source src= {{ reply.audio.url }} type="audio/mp3" />
+            </audio>
+            <div class='icon-time'>
+            {% for icon in icons %} <img src={{ icon.audio.url }} class='audio-icon'> {% endfor %}
+            audio
+            <i> {{ reply.time }} </i>
+            </div>
+        </div>
+       {% endif %}
+
+       {% if reply.image %} 
+        <div class='title-panel4'> <img src={{reply.image.url}} class='sent-image'> 
+            <div class='icon-time'>
+            {% for icon in icons %} <img src={{ icon.image.url }} class='image-icon'> {% endfor %}
+            photo
+             <i> {{ reply.time }} </i> 
+            </div>
+        </div>{% endif %}
+
+        {% if reply.video %}
+        <div class='title-panel6'>
+            <video class="sent-video" controls="controls" onload="Javascript:AutoRefresh(1000);">
+                <source src= {{ reply.video.url }} type="video/mp4" />
+            </video>
+            <div class='icon-time'>
+                {% for icon in icons %} <img src={{ icon.video.url }} class='video-icon'> {% endfor %}
+                video 
+            <i> {{ reply.time }} </i>
+            </div>
+        </div>
+       {% endif %}
+
+
+        
+      
+        
+    </div>
+
+    {% endif %}
+    {% endfor %}
+
+
+
+{% endif %}
+
+{% endif %}
+
+<!--script>
+    fetch('/suggestion/').then(response => response.json()).then(data => alert(data.message));
+</script-->
+
+<script>
+    {% if messages %}
+    var message_container = document.getElementById('message-container');
+    var message = document.getElementById('message');
+
+    message_container.style.display = 'block';
+    message.innerHTML = '{{message}}';
+    setTimeout(function() {
+        message_container.style.display = 'none';
+    }, 5000);
+    {% endif %}
+</script>
+
+<script> 
+
+    const comment_button = document.querySelector('.comment-btn');
+    const comment_div = document.querySelector('.comments');
+    const open_button = document.querySelector('.open');
+    const close_button = document.querySelector('.close');
+    const open_button2 = document.querySelector('.open2');
+    const close_button2 = document.querySelector('.close2');
+    const own_comment_div = document.querySelector('.own-comment-div');
+    const hide_comment_div = document.querySelector('.hide-comment-div');
+
+
+    comment_button.addEventListener('click', () => {
+        comment_button.classList.toggle('active');
+        comment_div.classList.toggle('active');
+        open_button.classList.toggle('active');
+        close_button.classList.toggle('active');
+    });
+
+    hide_comment_div.addEventListener('click', () => {
+        hide_comment_div.classList.toggle('active');
+        own_comment_div.classList.toggle('active');
+        open_button2.classList.toggle('active');
+        close_button2.classList.toggle('active');
+    });
+
+</script>
+
+
+<style>
+
+    @media (min-width: 1300px) and (max-width: 3000px) {
+
+        .ui-comment {
+            display: flex;
+            gap: 10px;
+        }
+
+        .ui {
+            height: 40px; width: 40px;
+            margin: 18px 1px;
+            object-fit: cover;
+        }
+
+        .image-icon, .audio-icon, .video-icon {
+            border-radius: 0;
+            width: 20px; height: 20px;
+            margin: auto 10px;
+        }
+        
+        .icon-time {
+            font-size: 15px;
+            color: black;
+            display: flex;
+            width: content-fit;
+
+        }
+
+        .title-panel4, .title-panel6 {
+            margin: 20px 10px; 
+            font-size: 15px;
+            width: 502px;
+            color: black;
+            height: auto;
+            border-radius: 12px;
+            text-align: left;
+            border: solid white thick;
+            border-bottom: solid white 10px;
+            background-color: white;
+        }
+
+        .title-panel5 {
+            margin: 10px 10px; 
+            font-size: 15px;
+            width: 502px;
+            color: black;
+            height: auto;
+            border-radius: 12px;
+            text-align: left;
+            border: solid white thick;
+            border-bottom: solid white 10px;
+            background-color: white;
+        }
+
+        .icon-time i {
+            color: black;
+            margin: auto 10px;
+
+        }
+
+        .sent-image {
+            margin-left: 1px;
+            width: 500px;
+            height: 400px;
+            object-fit: cover;
+            margin-top: 1px;
+            border-radius: 5px;
+            
+        }
+
+        .sent-audio {
+            width: 500px;
+            height: 100px;
+            margin-top: -40px;
+            border-radius: 5px;
+            margin-bottom: 5px;
+        }
+
+        .sent-video {
+            width: 500px;
+            height: 400px;
+            border-radius: 5px;
+            margin-bottom: 5px;
+        }
+        .comment-time-delete-div {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        .home-set {
+            position: relative;
+            left: 0%;
+            margin: 5px 0;
+            width: 98%;
+            height: 400px;
+            border-radius: 12px;
+            border: transparent;
+        }
+
+        .title-panel {
+            margin: 20px 200px; 
+            font-size: 20px;
+            height: auto;
+            border-radius: 12px;
+            text-align: left;
+            padding: 30px;
+            box-shadow: 5px 5px 5px 5px grey;
+            transition: 1.5s;
+        }
+
+        .title-panel.active {
+            display: none;
+        }
+
+        .title-panel2 {
+            margin: 20px 10px; 
+            padding: 10px;
+            font-size: 17px;
+            height: auto;
+            border-radius: 12px;
+            text-align: left;
+            background-color: white;
+            color: black;
+            width: 492px;
+        }
+
+        .title-panel3 {
+            margin: 20px 10px; 
+            font-size: 20px;
+            height: auto;
+            border-radius: 12px;
+            text-align: left;
+        }
+
+        .comment-like-back-div {
+            display: flex;
+            height: 100px;
+            justify-content: space-between;
+            padding-bottm: 10px;
+            background-color: grey;
+            border-radius: 12px;
+        }
+
+        .comment-btn-number {
+            text-align: center;
+            font-size: 17px;
+            color: black;
+        }
+
+        .comment-btn-number i {
+            color: black;
+        }
+
+        .like-btn-number {
+            text-align: center;
+            font-size: 17px;
+            color: black;
+        }
+
+        .like-btn-number i {
+            color: black;
+        }
+
+        .back-btn-number {
+            text-align: left;
+            font-size: 17px;
+            color: black;
+            margin-right: 20px;
+        }
+
+    
+
+        .comment-btn {
+            font-size: 18px;
+            margin: auto;
+            height: 40px;
+            width: 40px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            border: none;
+            color: white;
+            scale: 1;
+            border-radius: 1px;
+            transition: 0.05s;
+            display: flex;
+            &:hover {
+                cursor: pointer;
+                scale: 1.05;
+            }
+            &:active {
+                scale: 1;
+            }
+        }
+
+        .comment-btn.active {
+            
+        }
+
+        .like-btn {
+            padding: 10px 30px;
+            font-size: 18px;
+            margin: auto 10px;
+            margin-top: 5px;
+            margin-bottom: 20px;
+            height: 40px;
+            width: 40px;
+            border: none;
+            border-radius: 3rem;
+            color: white;
+            scale: 1;
+            transition: 0.05s;
+            display: flex;
+            &:hover {
+                cursor: pointer;
+                scale: 1.05;
+            }
+            &:active {
+                scale: 1;
+            }
+        }
+
+        .back-to-inbox-btn {
+            padding: 10px 30px;
+            font-size: 18px;
+            margin: auto;
+            height: 40px;
+            width: 40px;
+            margin-top: 10px;
+            margin-bottom: 2px;
+            border: none;
+            border-radius: 3rem;
+            color: white;
+            scale: 1;
+            transition: 0.05s;
+            display: flex;
+            &:hover {
+                cursor: pointer;
+                scale: 1.05;
+            }
+            &:active {
+                scale: 1;
+            }
+        }
+
+
+        .comments {
+            height: auto;
+            width: 810px;
+            background-color: grey;
+            margin-top: 50px;
+            border-radius: 12px;
+            padding: 30px;
+            padding-top: 1px;
+            text-align: center;
+            display: none;
+            transition: 2s;
+        }
+
+        .comments.active {
+            display: block;
+        }
+
+        .comments h4 {
+            margin-top: 5px;
+            margin-bottom: 35px;
+        }
+
+        .comment-div {
+            padding: 10px;
+            width: fit-content;
+            height: auto;
+            background-color: #ffff;
+            border-radius: 12px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+
+        }
+
+        .comment-name {
+            text-align: left;
+            font-size: 14px;
+            color: black;
+            margin-bottom: 20px;
+            width: fit-content;
+        }
+
+        .comment-reply {
+            text-align: left;
+            color: black;
+            font-size: 12px;
+            width: fit-content;
+        }
+
+        .comment-time {
+            text-align: left;
+            color: black;
+            font-size: 12px;
+            margin-left: 1px;
+            width: fit-content;
+
+        }
+
+        .hide-comment-div {
+            padding: 10px 10px;
+            font-size: 18px;
+            margin: auto;
+            margin-right: 700px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            border: none;
+            border-radius: 3rem;
+            background-color: blue;
+            color: white;
+            scale: 1;
+            transition: 0.05s;
+            display: flex;
+            &:hover {
+                cursor: pointer;
+                scale: 1.05;
+            }
+            &:active {
+                scale: 1;
+            }
+        }
+
+        .hide-comment-div.active {
+            background-color: red;
+        }
+
+        .own-comment-div {
+            background-color: #36454f;
+            height: auto;
+            width: 790px;
+            padding: 10px;
+            border-radius: 12px;
+            display: grid;
+            margin: 10px auto;
+            text-align: center;
+            display: none;
+            transition: 2s;
+        }
+
+        .own-comment-div.active {
+            display: block;
+        }
+
+        .own-comment-div h6 {
+            margin-top: 8px;
+            margin-bottom: 8px;
+        }
+
+        .own-comment-msg {
+            width: 700px;
+            height: 100px;
+            margin: auto;
+            color: black;
+            border-radius: 12px;
+            padding: 10px;
+            font-size: 18px;
+            margin-top: 1px;
+        }
+
+        .own-comment-btn {
+            margin-left: 35px;
+            margin-right: 700px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            border-radius: 3rem;
+            background-color: blue;
+            padding: 10px 30px;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            scale: 1;
+            transition: 1s;
+            &:hover{
+                scale: 1.05;
+            }
+            &:active{
+                scale: 1;
+            }
+        }
+       
+
+        .reply-header {
+            display: flex;
+            gap: 300px;
+        }
+
+        .reply-btn {
+            padding: 10px 30px;
+            font-size: 18px;
+            margin: auto;
+            border: none;
+            border-radius: 3rem;
+            background-color: blue;
+            color: white;
+            scale: 1;
+            transition: 0.05s;
+            &:hover {
+                cursor: pointer;
+                scale: 1.05;
+            }
+            &:active {
+                scale: 1;
+            }
+        }
+
+        .reply-btn.active {
+            background-color: red;
+        }
+
+        .back-btn {
+            padding: 10px 60px;
+            font-size: 18px;
+            margin: auto;
+            margin-right: 14px;
+            margin-left: 695px;
+            border: none;
+            border-radius: 3rem;
+            background-color: red;
+            color: white;
+            scale: 1;
+            transition: 0.05s;
+            &:hover {
+                cursor: pointer;
+                scale: 1.05;
+            }
+            &:active {
+                scale: 1;
+            }
+        }
+
+        .back-btn.active {
+            display: none;
+        }
+
+        .space {
+            margin: 100px 200px;
+            font-size: 20px;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 5px 5px 5px 5px orange;
+            transition: 1.5s;
+        }
+
+        .space.active {
+            margin: 0 200px;
+            font-size: 20px;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 5px 5px 5px 5px orange;
+        }
+
+        .msg-area {
+            padding: 10px 10px;
+            select: none;
+            width: 850px;
+            border-radius: 12px;
+            height: 200px;
+            color: black;
+            font-size: 20px;
+            display: none;
+        }
+
+        .msg-area.active {
+            display: block;
+        }
+
+        .send-btn {
+            padding: 10px 30px;
+            font-size: 18px;
+            margin-top: 20px;
+            border: none;
+            border-radius: 3rem;
+            background-color: blue;
+            color: white;
+            scale: 1;
+            transition: 0.05s;
+            display: none;
+            &:hover {
+                cursor: pointer;
+                scale: 1.05;
+            }
+            &:active {
+                scale: 1;
+            }
+        }
+
+        .send-btn.active {
+            display: block;
+        }
+
+        .open {
+            margin: auto;
+            display: block;
+        }
+
+        .open.active {
+            display: none;
+        }
+        
+        .close {
+            margin: auto;
+            display: none;
+        }
+        
+        .close.active {
+            display: block;
+        }
+
+        
+
+        .open2 {
+            margin: auto;
+            display: block;
+        }
+
+        .open2.active {
+            display: none;
+        }
+        
+        .close2 {
+            margin: auto;
+            display: none;
+        }
+        
+        .close2.active {
+            display: block;
+        }
+
+    }
+
+    @media (max-width: 992px) {
+        .home-set {
+            position: relative;
+            left: 0%;
+            margin: 5px 0;
+            width: 98%;
+            height: 400px;
+            border-radius: 12px;
+            border: transparent;
+        }
+
+        .title-panel {
+            margin: 100px 10px; 
+            font-size: 60px;
+            height: auto;
+            width: 120%;
+            border-radius: 12px;
+            text-align: left;
+        }
+
+        .title-panel2 {
+            margin: 80px 10px; 
+            font-size: 45px;
+            height: auto;
+            width: 123%;
+            border-radius: 12px;
+            text-align: left;
+        }
+
+        .like-btn-panel {
+            border-radius: 50%;
+            width: 105px;
+            height: 105px;
+        }
+
+        .like-btn {
+            margin: -1px -5px;
+            width: 100px;
+            height: 100px; 
+        }
+
+        .like-display {
+            margin: -70px 150px;
+            font-size: 30px;
+        }
+
+        .space {
+            margin: 70px 70px;
+        }
+
+    }
+</style>
+
+
+
+{% endblock %}
+

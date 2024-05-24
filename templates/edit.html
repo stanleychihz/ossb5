@@ -1,0 +1,388 @@
+
+{% extends "xbase.html" %}
+
+{% block content %}
+
+{% if msgs %}
+
+    
+    <div class='title-panel2'> 
+
+        <div class='time'> Message sent on {{msgs.timestamp}} </div>
+        <div class='outbox-msg'> <i> {{ msgs.msg }} </i> </div>
+        <div class='status'>  (Status : {{msgs.identity}})   
+        </div>
+    <form method='post' enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <input type='text' value = {{ msgs.pkv }}  name='pkv' hidden>
+        <input type='text' value = {{ msgs.cat }}  name='cat' hidden>
+        <input type='text' value = {{ msgs.reg }}  name='reg' hidden>
+        <input type='text' value = {{ msgs.identity }}  name='identity' hidden>
+    
+        <textarea type='text' class='msg-area' name='edit'> {{ msgs.msg }} </textarea>
+        <div class='proofs'>
+            <div class='proofs2'>
+
+            {% if msgs.audio %}
+            <div class='audio'>
+                <audio controls class="sent-audio" onload="Javascript:AutoRefresh(1000);">
+                    <source src=  {{ msgs.audio.url }}  type="audio/mp3" />
+                </audio>
+            <input class="proof-image" type="file" name="audio" accept='audio/*'>
+            Upload Audio
+            </div>
+            {% endif %}
+
+            {% if msgs.image %}
+            <div class='image'>
+                <img src= {{msgs.image.url}}  class='sent-image'>
+                <input class="proof-image" type="file" name="image"  accept='image/*'>
+                Upload Image
+
+            </div>
+            {% endif %}
+
+            {% if msgs.video %}
+            <div class='video'>
+                <video class="sent-video" controls="controls" onload="Javascript:AutoRefresh(1000);">
+                    <source src= {{ msgs.video.url }}  type="video/mp4" />
+                </video>
+                <input class="proof-image" type="file" name="video" accept='video/*'>
+                Upload Video
+            </div>
+            {% endif %}
+
+            
+        </div>
+    
+
+        <div class='btns'> 
+            <button class='edit-btn' type='submit'> Edit </button>
+        </form>
+            <a href="{% url 'outbox' %}"> <div class='back-btn'> Back </div> </a>
+        </div>
+            
+    </div>
+    
+    {% endif %}
+
+
+<!--script> 
+
+    const edit_button = document.querySelector('.edit-btn');
+    const message_area = document.querySelector('.msg-area');
+    const send_button = document.querySelector('.send-btn');
+    const open_button = document.querySelector('.open');
+    const close_button = document.querySelector('.close');
+    const back_button = document.querySelector('.back-btn');
+    const buttons = document.querySelector('.btns');
+    const panel = document.querySelector('.title-panel2');
+
+    edit_button.addEventListener('click', () => {
+        message_area.classList.toggle('active');
+        send_button.classList.toggle('active');
+        open_button.classList.toggle('active');
+        close_button.classList.toggle('active');
+        back_button.classList.toggle('active');
+        buttons.classList.toggle('active');
+        panel.classList.toggle('active');
+    });
+
+</script-->
+
+
+
+<style>
+
+    @media (min-width: 1300px) and (max-width: 3000px) {
+
+        .proofs {
+            display: grid
+            background-color: grey;
+            padding: 1px;
+            font-size: 15px;
+        }
+        .proofs2 {
+            display: inline-flex;
+            justify-content: space-between;
+            background-color: grey;
+            padding: 1px;
+            margin-top: 30px;
+            margin-bottom: 30px;
+            border-radius: 12px;
+            gap: 115px;
+        }
+
+        .image, .video, .audio {
+            font-size: 15px;
+            display: grid;
+            gap: 8px;
+        }
+
+        .sent-image, .sent-video {
+            border-radius: 12px;
+            border: white solid 5px;
+            margin: auto 1px;
+            height: 200px; width: 200px;
+            margin-bottom: 20px;
+            object-fit: cover;
+        }
+
+        .sent-audio {
+            border-radius: 30px;
+            margin: 85px 1px;
+            height: 50px; width: 200px;
+            margin-bottom: 85px;
+            border: white solid 5px;
+        }
+
+        .home-set {
+            position: relative;
+            left: 0%;
+            margin: 5px 0;
+            width: 98%;
+            height: 400px;
+            border-radius: 12px;
+            border: transparent;
+        }
+
+        .title-panel {
+            margin: 20px 10px; 
+            font-size: 30px;
+            height: auto;
+            border-radius: 12px;
+            text-align: left;
+        }
+
+        .title-panel2 {
+            margin: 230px 200px; 
+            font-size: 16px;
+            text-align: centre;
+            height: auto;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: left;
+            background-color: grey;
+            transition: 1.5s;
+        }
+
+        .title-panel2.active {
+            margin: 80px 200px;
+        }
+
+        .title-panel2:hover {
+            box-shadow: 5px 5px orange;
+        }
+
+        .outbox-msg, .status {
+            margin: 20px 20px;
+        }
+
+        .time {
+            margin: 20px 20px;
+            font-size: 20px;
+        }
+
+        .like-btn-panel {
+            border-radius: 50%;
+            width: 55px;
+            height: 55px;
+        }
+
+        .like-btn {
+            margin: -20px 15px;
+            width: 50px;
+            height: 50px; 
+        }
+
+        .reply-btn {
+            margin: 10px 10px;
+            background-color: green;
+            padding: 15px;
+            height: 20px;
+            width: 100px;
+            font-size: 15px;
+            text-align: center;
+            border-radius: 12px;
+        }
+        
+        .no-reply-btn {
+            margin: 10px 10px;
+            background-color: orange;
+            padding: 15px;
+            height: 20px;
+            width: 100px;
+            font-size: 15px;
+            text-align: center;
+            border-radius: 12px;
+        }
+
+        .delete-btn {
+            margin: 0 700px;
+            background-color: red;
+            padding: 15px;
+            height: 20px;
+            width: 150px;
+            text-align: center;
+            border-radius: 12px;
+        }
+
+        .btns {
+            margin: 0 610px;
+            display: flex;
+            gap: 40px;
+        }
+
+        .btns.active {
+            margin: 0 785px;
+        }
+
+        .edit-btn {
+            background-color: blue;
+            padding: 17px 30px;
+            text-align: center;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            margin: auto;
+            border: none;
+        }
+
+        .back-btn {
+            background-color: red;
+            padding: 15px;
+            height: 20px;
+            width: 100px;
+            text-align: center;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            margin: auto;
+        }
+
+        .back-btn.active {
+            display: none;
+        }
+
+        .space {
+            margin: 50px 10px;
+            font-size: 20px;
+        }
+
+        .msg-area {
+            padding: 10px 10px;
+            select: none;
+            width: 850px;
+            border-radius: 12px;
+            height: 100px;
+            color: black;
+            font-size: 15px;
+        }
+
+        
+
+        .send-btn {
+            padding: 10px 30px;
+            font-size: 18px;
+            margin-top: 20px;
+            border: none;
+            border-radius: 3rem;
+            background-color: blue;
+            color: white;
+            scale: 1;
+            transition: 0.05s;
+            display: none;
+            &:hover {
+                cursor: pointer;
+                scale: 1.05;
+            }
+            &:active {
+                scale: 1;
+            }
+        }
+
+        .send-btn.active {
+            display: block;
+        }
+
+        .open {
+            margin: auto;
+            display: block;
+        }
+
+        .open.active {
+            display: none;
+        }
+        
+        .close {
+            margin: auto;
+            display: none;
+        }
+        
+        .close.active {
+            display: block;
+        }
+    }
+
+    @media (max-width: 992px) {
+        .home-set {
+            position: relative;
+            left: 0%;
+            margin: 5px 0;
+            width: 98%;
+            height: 400px;
+            border-radius: 12px;
+            border: transparent;
+        }
+
+        .title-panel {
+            margin: 20px 10px; 
+            font-size: 30px;
+            height: auto;
+            
+            border-radius: 12px;
+            text-align: left;
+        }
+
+        .title-panel2 {
+            margin: 100px 10px; 
+            font-size: 20px;
+            height: auto;
+            width: 118%;
+            padding: 50px;
+            border-radius: 12px;
+            text-align: left;
+            background-color: grey;
+            scale: 1;
+            transition: 1s;
+        }
+
+        .title-panel2:hover {
+            background-color: black;
+            scale: 1.03;
+        }
+
+        .time, .outbox-msg, .status {
+            margin: 20px 20px;
+        }
+
+        .like-btn-panel {
+            border-radius: 50%;
+            width: 105px;
+            height: 105px;
+        }
+
+        .like-btn {
+            margin: -35px 45px;
+            width: 100px;
+            height: 100px; 
+        }
+
+        
+    }
+</style>
+
+
+
+{% endblock %}
